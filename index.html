@@ -184,12 +184,13 @@
     width: 50px;
     height: 50px;
     border-radius: 8px;
-    background: #111;
+    background: #fff;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
     overflow: hidden;
+    padding: 4px;
   }
 
   .brand-info h2 {
@@ -1241,15 +1242,14 @@ const activeVariant = new Map();
 
 
 function getBrandLogo(brand) {
-  if (brand === 'Adidas') return `<svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg" width="46" height="46" style="display:block">
-    <polygon points="25,8 43,40 7,40" fill="none" stroke="white" stroke-width="3.5" stroke-linejoin="round"/>
-    <line x1="17.5" y1="40" x2="25" y2="26" stroke="white" stroke-width="3.5" stroke-linecap="round"/>
-    <line x1="32.5" y1="40" x2="25" y2="26" stroke="white" stroke-width="3.5" stroke-linecap="round"/>
-  </svg>`;
-  if (brand === 'Nike') return `<svg viewBox="0 0 50 30" xmlns="http://www.w3.org/2000/svg" width="56" height="34" style="display:block">
-    <path d="M3,22 Q18,2 46,10 Q32,18 12,28 Q4,32 3,22 Z" fill="white"/>
-  </svg>`;
-  return `<span style="font-size:0.75rem;font-weight:700;color:white">${brand.substring(0,3).toUpperCase()}</span>`;
+  const logos = {
+    'Adidas': 'logos/ADIDAS LOGO.png',
+    'Nike':   'logos/NIKE LOGO.png',
+  };
+  if (logos[brand]) {
+    return `<img src="${logos[brand]}" alt="${brand}" style="width:38px;height:38px;object-fit:contain;">`;
+  }
+  return `<span style="font-size:0.75rem;font-weight:700;color:#111">${brand.substring(0,3).toUpperCase()}</span>`;
 }
 
 function render() {
