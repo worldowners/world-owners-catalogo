@@ -581,13 +581,41 @@
     from { opacity: 0; transform: translateY(18px); }
     to   { opacity: 1; transform: translateY(0); }
   }
+
+  /* ── Language Selector ── */
+  .lang-selector {
+    display: flex;
+    gap: 4px;
+  }
+  .lang-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 0.7rem;
+    font-family: 'Times New Roman MT', 'Times New Roman', Times, serif;
+    padding: 3px 7px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.05em;
+  }
+  .lang-btn:hover { color: var(--accent); border-color: var(--accent); }
+  .lang-btn.active { background: var(--accent); color: #0e0e0e; border-color: var(--accent); font-weight: 700; }
 </style>
 </head>
 <body>
 
 <header>
   <div class="logo">World Owners</div>
-  <div class="header-note">Catálogo Exclusivo · Clientes</div>
+  <div style="display:flex;align-items:center;gap:1rem;">
+    <div class="header-note" id="header-note">Catálogo Exclusivo · Clientes</div>
+    <div class="lang-selector">
+      <button class="lang-btn active" data-lang="pt">PT</button>
+      <button class="lang-btn" data-lang="en">EN</button>
+      <button class="lang-btn" data-lang="fr">FR</button>
+      <button class="lang-btn" data-lang="es">ES</button>
+    </div>
+  </div>
 </header>
 
 <section class="hero">
@@ -630,6 +658,370 @@
 
 <script>
 const INSTAGRAM = "https://www.instagram.com/worldowners.imports";
+
+// ============================================================
+// SISTEMA DE TRADUÇÕES
+// ============================================================
+const TRANSLATIONS = {
+  pt: {
+    headerNote: "Catálogo Exclusivo · Clientes",
+    heroEyebrow: "Coleção atual",
+    heroTitle: "O luxo que sempre quiseste,<br>ao <em>preço que mereces.</em>",
+    heroSub: "Peças selecionadas das melhores marcas. Para encomendar, contacte-nos via Instagram.",
+    searchPlaceholder: "Pesquisar produto, marca…",
+    filterAll: "Todos",
+    filters: ["Sapatilhas", "T-Shirts", "Casacos", "Sweats/Hoodies", "Calças/Calções", "Fato-treino"],
+    resultsOne: "produto encontrado",
+    resultsMany: "produtos encontrados",
+    resultsNone: "Nenhum produto encontrado",
+    sizes: "Tamanhos",
+    orderBtn: "📩 Encomendar via Instagram",
+    closeBtn: "Fechar",
+    footer: "World Owners · Catálogo Privado · Partilhe apenas com clientes",
+    colorMap: {
+      "Amarelo / Laranja": "Amarelo / Laranja",
+      "Amarelo / Verde": "Amarelo / Verde",
+      "Azul": "Azul",
+      "Azul / Branco": "Azul / Branco",
+      "Azul / Verde": "Azul / Verde",
+      "Bege / Castanho": "Bege / Castanho",
+      "Bege / Castanho Escuro": "Bege / Castanho Escuro",
+      "Branco": "Branco",
+      "Branco / Castanho": "Branco / Castanho",
+      "Branco / Dourado": "Branco / Dourado",
+      "Branco / Floral Azul": "Branco / Floral Azul",
+      "Branco / Preto": "Branco / Preto",
+      "Branco / Rosa": "Branco / Rosa",
+      "Branco / Verde": "Branco / Verde",
+      "Castanho / Azul Claro": "Castanho / Azul Claro",
+      "Cinza / Branco": "Cinza / Branco",
+      "Cinza Prateado / Creme": "Cinza Prateado / Creme",
+      "Creme / Preto": "Creme / Preto",
+      "Laranja / Rosa": "Laranja / Rosa",
+      "Leopardo / Verde": "Leopardo / Verde",
+      "Leopardo / Vermelho": "Leopardo / Vermelho",
+      "Navy / Azul Claro": "Navy / Azul Claro",
+      "Navy / Azul Escuro": "Navy / Azul Escuro",
+      "Navy / Bordeaux": "Navy / Bordeaux",
+      "Navy / Creme": "Navy / Creme",
+      "Navy / Off White": "Navy / Off White",
+      "Off White / Amarelo": "Off White / Amarelo",
+      "Off White / Azul Claro": "Off White / Azul Claro",
+      "Off White / Bege": "Off White / Bege",
+      "Off White / Bordeaux": "Off White / Bordeaux",
+      "Off White / Preto": "Off White / Preto",
+      "Off White / Roxo / Verde": "Off White / Roxo / Verde",
+      "Off White / Verde": "Off White / Verde",
+      "Prateado / Branco": "Prateado / Branco",
+      "Preto": "Preto",
+      "Preto / Azul": "Preto / Azul",
+      "Preto / Branco": "Preto / Branco",
+      "Preto / Branco / Dourado": "Preto / Branco / Dourado",
+      "Preto / Cinza": "Preto / Cinza",
+      "Preto / Creme": "Preto / Creme",
+      "Preto / Laranja": "Preto / Laranja",
+      "Preto / Off White": "Preto / Off White",
+      "Preto / Prata": "Preto / Prata",
+      "Preto / Verde": "Preto / Verde",
+      "Preto / Vermelho": "Preto / Vermelho",
+      "Rosa / Branco": "Rosa / Branco",
+      "Rosa / Off White": "Rosa / Off White",
+      "Rosa / Roxo": "Rosa / Roxo",
+      "Rosa / Verde": "Rosa / Verde",
+      "Rosa Fusão / Preto": "Rosa Fusão / Preto",
+      "Roxo Metálico / Cinza": "Roxo Metálico / Cinza",
+      "Verde / Rosa": "Verde / Rosa",
+      "Verde Claro / Amarelo": "Verde Claro / Amarelo",
+      "Vermelho / Branco": "Vermelho / Branco",
+      "Vermelho / Off White": "Vermelho / Off White"
+},
+  },
+  en: {
+    headerNote: "Exclusive Catalogue · Clients",
+    heroEyebrow: "Current Collection",
+    heroTitle: "The luxury you always wanted,<br>at <em>the price you deserve.</em>",
+    heroSub: "Carefully selected pieces from the best brands. To order, contact us via Instagram.",
+    searchPlaceholder: "Search product, brand…",
+    filterAll: "All",
+    filters: ["Sneakers", "T-Shirts", "Jackets", "Sweats/Hoodies", "Pants/Shorts", "Tracksuit"],
+    resultsOne: "product found",
+    resultsMany: "products found",
+    resultsNone: "No products found",
+    sizes: "Sizes",
+    orderBtn: "📩 Order via Instagram",
+    closeBtn: "Close",
+    footer: "World Owners · Private Catalogue · Share with clients only",
+    colorMap: {
+      "Amarelo / Laranja": "Yellow / Orange",
+      "Amarelo / Verde": "Yellow / Green",
+      "Azul": "Blue",
+      "Azul / Branco": "Blue / White",
+      "Azul / Verde": "Blue / Green",
+      "Bege / Castanho": "Beige / Brown",
+      "Bege / Castanho Escuro": "Beige / Dark Brown",
+      "Branco": "White",
+      "Branco / Castanho": "White / Brown",
+      "Branco / Dourado": "White / Gold",
+      "Branco / Floral Azul": "White / Blue Floral",
+      "Branco / Preto": "White / Black",
+      "Branco / Rosa": "White / Pink",
+      "Branco / Verde": "White / Green",
+      "Castanho / Azul Claro": "Brown / Light Blue",
+      "Cinza / Branco": "Grey / White",
+      "Cinza Prateado / Creme": "Silver Grey / Cream",
+      "Creme / Preto": "Cream / Black",
+      "Laranja / Rosa": "Orange / Pink",
+      "Leopardo / Verde": "Leopard / Green",
+      "Leopardo / Vermelho": "Leopard / Red",
+      "Navy / Azul Claro": "Navy / Light Blue",
+      "Navy / Azul Escuro": "Navy / Dark Blue",
+      "Navy / Bordeaux": "Navy / Bordeaux",
+      "Navy / Creme": "Navy / Cream",
+      "Navy / Off White": "Navy / Off White",
+      "Off White / Amarelo": "Off White / Yellow",
+      "Off White / Azul Claro": "Off White / Light Blue",
+      "Off White / Bege": "Off White / Beige",
+      "Off White / Bordeaux": "Off White / Bordeaux",
+      "Off White / Preto": "Off White / Black",
+      "Off White / Roxo / Verde": "Off White / Purple / Green",
+      "Off White / Verde": "Off White / Green",
+      "Prateado / Branco": "Silver / White",
+      "Preto": "Black",
+      "Preto / Azul": "Black / Blue",
+      "Preto / Branco": "Black / White",
+      "Preto / Branco / Dourado": "Black / White / Gold",
+      "Preto / Cinza": "Black / Grey",
+      "Preto / Creme": "Black / Cream",
+      "Preto / Laranja": "Black / Orange",
+      "Preto / Off White": "Black / Off White",
+      "Preto / Prata": "Black / Silver",
+      "Preto / Verde": "Black / Green",
+      "Preto / Vermelho": "Black / Red",
+      "Rosa / Branco": "Pink / White",
+      "Rosa / Off White": "Pink / Off White",
+      "Rosa / Roxo": "Pink / Purple",
+      "Rosa / Verde": "Pink / Green",
+      "Rosa Fusão / Preto": "Fusion Pink / Black",
+      "Roxo Metálico / Cinza": "Metallic Purple / Grey",
+      "Verde / Rosa": "Green / Pink",
+      "Verde Claro / Amarelo": "Light Green / Yellow",
+      "Vermelho / Branco": "Red / White",
+      "Vermelho / Off White": "Red / Off White"
+},
+  },
+  fr: {
+    headerNote: "Catalogue Exclusif · Clients",
+    heroEyebrow: "Collection actuelle",
+    heroTitle: "Le luxe que vous avez toujours voulu,<br>au <em>prix que vous méritez.</em>",
+    heroSub: "Pièces sélectionnées des meilleures marques. Pour commander, contactez-nous via Instagram.",
+    searchPlaceholder: "Rechercher produit, marque…",
+    filterAll: "Tous",
+    filters: ["Sneakers", "T-Shirts", "Vestes", "Sweats/Hoodies", "Pantalons/Shorts", "Survêtement"],
+    resultsOne: "produit trouvé",
+    resultsMany: "produits trouvés",
+    resultsNone: "Aucun produit trouvé",
+    sizes: "Pointures",
+    orderBtn: "📩 Commander via Instagram",
+    closeBtn: "Fermer",
+    footer: "World Owners · Catalogue Privé · Partagez uniquement avec les clients",
+    colorMap: {
+      "Amarelo / Laranja": "Jaune / Orange",
+      "Amarelo / Verde": "Jaune / Vert",
+      "Azul": "Bleu",
+      "Azul / Branco": "Bleu / Blanc",
+      "Azul / Verde": "Bleu / Vert",
+      "Bege / Castanho": "Beige / Marron",
+      "Bege / Castanho Escuro": "Beige / Marron Foncé",
+      "Branco": "Blanc",
+      "Branco / Castanho": "Blanc / Marron",
+      "Branco / Dourado": "Blanc / Or",
+      "Branco / Floral Azul": "Blanc / Floral Bleu",
+      "Branco / Preto": "Blanc / Noir",
+      "Branco / Rosa": "Blanc / Rose",
+      "Branco / Verde": "Blanc / Vert",
+      "Castanho / Azul Claro": "Marron / Bleu Clair",
+      "Cinza / Branco": "Gris / Blanc",
+      "Cinza Prateado / Creme": "Gris Argenté / Crème",
+      "Creme / Preto": "Crème / Noir",
+      "Laranja / Rosa": "Orange / Rose",
+      "Leopardo / Verde": "Léopard / Vert",
+      "Leopardo / Vermelho": "Léopard / Rouge",
+      "Navy / Azul Claro": "Marine / Bleu Clair",
+      "Navy / Azul Escuro": "Marine / Bleu Foncé",
+      "Navy / Bordeaux": "Marine / Bordeaux",
+      "Navy / Creme": "Marine / Crème",
+      "Navy / Off White": "Marine / Blanc Cassé",
+      "Off White / Amarelo": "Blanc Cassé / Jaune",
+      "Off White / Azul Claro": "Blanc Cassé / Bleu Clair",
+      "Off White / Bege": "Blanc Cassé / Beige",
+      "Off White / Bordeaux": "Blanc Cassé / Bordeaux",
+      "Off White / Preto": "Blanc Cassé / Noir",
+      "Off White / Roxo / Verde": "Blanc Cassé / Violet / Vert",
+      "Off White / Verde": "Blanc Cassé / Vert",
+      "Prateado / Branco": "Argenté / Blanc",
+      "Preto": "Noir",
+      "Preto / Azul": "Noir / Bleu",
+      "Preto / Branco": "Noir / Blanc",
+      "Preto / Branco / Dourado": "Noir / Blanc / Or",
+      "Preto / Cinza": "Noir / Gris",
+      "Preto / Creme": "Noir / Crème",
+      "Preto / Laranja": "Noir / Orange",
+      "Preto / Off White": "Noir / Blanc Cassé",
+      "Preto / Prata": "Noir / Argent",
+      "Preto / Verde": "Noir / Vert",
+      "Preto / Vermelho": "Noir / Rouge",
+      "Rosa / Branco": "Rose / Blanc",
+      "Rosa / Off White": "Rose / Blanc Cassé",
+      "Rosa / Roxo": "Rose / Violet",
+      "Rosa / Verde": "Rose / Vert",
+      "Rosa Fusão / Preto": "Rose Fusion / Noir",
+      "Roxo Metálico / Cinza": "Violet Métallique / Gris",
+      "Verde / Rosa": "Vert / Rose",
+      "Verde Claro / Amarelo": "Vert Clair / Jaune",
+      "Vermelho / Branco": "Rouge / Blanc",
+      "Vermelho / Off White": "Rouge / Blanc Cassé"
+},
+  },
+  es: {
+    headerNote: "Catálogo Exclusivo · Clientes",
+    heroEyebrow: "Colección actual",
+    heroTitle: "El lujo que siempre quisiste,<br>al <em>precio que mereces.</em>",
+    heroSub: "Piezas seleccionadas de las mejores marcas. Para pedir, contáctanos por Instagram.",
+    searchPlaceholder: "Buscar producto, marca…",
+    filterAll: "Todos",
+    filters: ["Zapatillas", "Camisetas", "Chaquetas", "Sudaderas/Hoodies", "Pantalones/Shorts", "Chándal"],
+    resultsOne: "producto encontrado",
+    resultsMany: "productos encontrados",
+    resultsNone: "No se encontraron productos",
+    sizes: "Tallas",
+    orderBtn: "📩 Pedir por Instagram",
+    closeBtn: "Cerrar",
+    footer: "World Owners · Catálogo Privado · Compartir solo con clientes",
+    colorMap: {
+      "Amarelo / Laranja": "Amarillo / Naranja",
+      "Amarelo / Verde": "Amarillo / Verde",
+      "Azul": "Azul",
+      "Azul / Branco": "Azul / Blanco",
+      "Azul / Verde": "Azul / Verde",
+      "Bege / Castanho": "Beige / Marrón",
+      "Bege / Castanho Escuro": "Beige / Marrón Oscuro",
+      "Branco": "Blanco",
+      "Branco / Castanho": "Blanco / Marrón",
+      "Branco / Dourado": "Blanco / Dorado",
+      "Branco / Floral Azul": "Blanco / Floral Azul",
+      "Branco / Preto": "Blanco / Negro",
+      "Branco / Rosa": "Blanco / Rosa",
+      "Branco / Verde": "Blanco / Verde",
+      "Castanho / Azul Claro": "Marrón / Azul Claro",
+      "Cinza / Branco": "Gris / Blanco",
+      "Cinza Prateado / Creme": "Gris Plateado / Crema",
+      "Creme / Preto": "Crema / Negro",
+      "Laranja / Rosa": "Naranja / Rosa",
+      "Leopardo / Verde": "Leopardo / Verde",
+      "Leopardo / Vermelho": "Leopardo / Rojo",
+      "Navy / Azul Claro": "Navy / Azul Claro",
+      "Navy / Azul Escuro": "Navy / Azul Oscuro",
+      "Navy / Bordeaux": "Navy / Burdeos",
+      "Navy / Creme": "Navy / Crema",
+      "Navy / Off White": "Navy / Blanco Roto",
+      "Off White / Amarelo": "Blanco Roto / Amarillo",
+      "Off White / Azul Claro": "Blanco Roto / Azul Claro",
+      "Off White / Bege": "Blanco Roto / Beige",
+      "Off White / Bordeaux": "Blanco Roto / Burdeos",
+      "Off White / Preto": "Blanco Roto / Negro",
+      "Off White / Roxo / Verde": "Blanco Roto / Morado / Verde",
+      "Off White / Verde": "Blanco Roto / Verde",
+      "Prateado / Branco": "Plateado / Blanco",
+      "Preto": "Negro",
+      "Preto / Azul": "Negro / Azul",
+      "Preto / Branco": "Negro / Blanco",
+      "Preto / Branco / Dourado": "Negro / Blanco / Dorado",
+      "Preto / Cinza": "Negro / Gris",
+      "Preto / Creme": "Negro / Crema",
+      "Preto / Laranja": "Negro / Naranja",
+      "Preto / Off White": "Negro / Blanco Roto",
+      "Preto / Prata": "Negro / Plata",
+      "Preto / Verde": "Negro / Verde",
+      "Preto / Vermelho": "Negro / Rojo",
+      "Rosa / Branco": "Rosa / Blanco",
+      "Rosa / Off White": "Rosa / Blanco Roto",
+      "Rosa / Roxo": "Rosa / Morado",
+      "Rosa / Verde": "Rosa / Verde",
+      "Rosa Fusão / Preto": "Rosa Fusión / Negro",
+      "Roxo Metálico / Cinza": "Morado Metálico / Gris",
+      "Verde / Rosa": "Verde / Rosa",
+      "Verde Claro / Amarelo": "Verde Claro / Amarillo",
+      "Vermelho / Branco": "Rojo / Blanco",
+      "Vermelho / Off White": "Rojo / Blanco Roto"
+},
+  }
+};
+
+let currentLang = 'pt';
+
+function applyLang(lang) {
+  currentLang = lang;
+  const t = TRANSLATIONS[lang];
+
+  // Header note
+  const hn = document.getElementById('header-note');
+  if (hn) hn.textContent = t.headerNote;
+
+  // Hero
+  const eyebrow = document.querySelector('.hero-eyebrow');
+  if (eyebrow) eyebrow.textContent = t.heroEyebrow;
+  const heroH1 = document.querySelector('.hero h1');
+  if (heroH1) heroH1.innerHTML = t.heroTitle;
+  const heroP = document.querySelector('.hero p');
+  if (heroP) heroP.textContent = t.heroSub;
+
+  // Search
+  const searchInput = document.getElementById('search');
+  if (searchInput) searchInput.placeholder = t.searchPlaceholder;
+
+  // Filter buttons
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  filterBtns.forEach(btn => {
+    if (btn.dataset.filter === 'all') {
+      btn.textContent = t.filterAll;
+    } else {
+      const ptFilters = TRANSLATIONS.pt.filters;
+      const idx = ptFilters.indexOf(btn.dataset.filter);
+      if (idx >= 0 && t.filters[idx]) btn.textContent = t.filters[idx];
+    }
+  });
+
+  // Order & close buttons in modal
+  const orderBtn = document.getElementById('btn-order');
+  if (orderBtn) orderBtn.textContent = t.orderBtn;
+  const closeBtn = document.querySelector('.btn-close');
+  if (closeBtn) closeBtn.textContent = t.closeBtn;
+
+  // Footer
+  const footer = document.querySelector('footer');
+  if (footer) footer.textContent = t.footer;
+
+  // Re-render to update results count
+  render();
+
+  // Update active lang button
+  document.querySelectorAll('.lang-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.lang === lang);
+  });
+
+  // Save preference
+  localStorage.setItem('wo-lang', lang);
+}
+
+// Lang button click
+document.querySelectorAll('.lang-btn').forEach(btn => {
+  btn.addEventListener('click', () => applyLang(btn.dataset.lang));
+});
+
+// Apply saved lang on load
+const savedLang = localStorage.getItem('wo-lang') || 'pt';
+if (savedLang !== 'pt') applyLang(savedLang);
+
 
 // ============================================================
 // DADOS — marcas ordenadas alfabeticamente.
@@ -802,7 +1194,9 @@ function getGroupKey(productName) {
 
 // Primeira tag = cor (ex: "Vermelho / Branco"), segunda = tamanhos
 function getColorFromTags(tags) {
-  return tags && tags[0] ? tags[0] : '–';
+  if (!tags || !tags[0]) return '–';
+  const colorMap = (TRANSLATIONS[currentLang] || TRANSLATIONS.pt).colorMap || {};
+  return colorMap[tags[0]] || tags[0];
 }
 
 // Agrupa lista de produtos por grupo
@@ -1006,8 +1400,11 @@ function render() {
       </div>`;
   }
 
+  const t = TRANSLATIONS[currentLang] || TRANSLATIONS.pt;
   document.getElementById('results-info').textContent =
-    totalVisible > 0 ? `${totalVisible} modelo${totalVisible !== 1 ? 's' : ''} encontrado${totalVisible !== 1 ? 's' : ''}` : '';
+    totalVisible === 0 ? t.resultsNone :
+    totalVisible === 1 ? `1 ${t.resultsOne}` :
+    `${totalVisible} ${t.resultsMany}`;
 }
 
 document.querySelectorAll('.filter-btn').forEach(btn => {
@@ -1029,7 +1426,11 @@ function openModal(p, brandName) {
   document.getElementById('modal-name').textContent = p.name;
   document.getElementById('modal-ref').textContent = p.ref;
   document.getElementById('modal-price').textContent = p.price;
-  document.getElementById('modal-tags').innerHTML = p.tags.map(t => `<span class="modal-tag">${t}</span>`).join('');
+  const colorMap = (TRANSLATIONS[currentLang] || TRANSLATIONS.pt).colorMap || {};
+  document.getElementById('modal-tags').innerHTML = p.tags.map(t => {
+    const translated = colorMap[t] || t;
+    return `<span class="modal-tag">${translated}</span>`;
+  }).join('');
   const allImgs = p.img ? [p.img, ...(p.imgs || [])] : [];
   let modalImgIdx = 0;
 
