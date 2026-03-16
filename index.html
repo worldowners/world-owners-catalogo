@@ -1285,7 +1285,7 @@ function render() {
     section.className = 'brand-section';
     section.innerHTML = `
       <div class="brand-header">
-        <div class="brand-logo-placeholder">${brand.brandInitial}</div>
+        <div class="brand-logo-placeholder">${getBrandLogo(brand.brand)}</div>
         <div class="brand-info">
           <h2>${brand.brand}</h2>
           <p>${allGroups.length} modelo${allGroups.length !== 1 ? 's' : ''}</p>
